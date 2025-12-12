@@ -16,6 +16,7 @@ import (
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/cookies"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/encryption"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 )
 
 // saveFunc performs a persistent store's save functionality using
@@ -214,6 +215,7 @@ func (t *ticket) setCookie(rw http.ResponseWriter, req *http.Request, s *session
 		return err
 	}
 
+	logger.Printf("ticket cookie: %+v", ticketCookie)
 	http.SetCookie(rw, ticketCookie)
 	return nil
 }

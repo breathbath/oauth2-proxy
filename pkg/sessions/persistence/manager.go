@@ -8,6 +8,7 @@ import (
 
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 )
 
 // Manager wraps a Store and handles the implementation details of the
@@ -33,16 +34,22 @@ func (m *Manager) Save(rw http.ResponseWriter, req *http.Request, s *sessions.Se
 	if s.CreatedAt == nil || s.CreatedAt.IsZero() {
 		s.CreatedAtNow()
 	}
+	logger.Printf("saving session %#v", s)
 
 	tckt, err := decodeTicketFromRequest(req, m.Options)
 	if err != nil {
 		tckt, err = newTicket(m.Options)
+		if tckt != nil {
+			logger.Printf("created a new session ticket: %s", tckt.id)
+		}
 		if err != nil {
 			return fmt.Errorf("error creating a session ticket: %v", err)
 		}
 	}
 
 	err = tckt.saveSession(s, func(key string, val []byte, exp time.Duration) error {
+		logger.Printf("saving session %q (expires %s): %v", key, exp, val)
+
 		return m.Store.Save(req.Context(), key, val, exp)
 	})
 	if err != nil {
@@ -60,8 +67,12 @@ func (m *Manager) Load(req *http.Request) (*sessions.SessionState, error) {
 		return nil, err
 	}
 
+	logger.Printf("loading session with id %q", tckt.id)
+
 	return tckt.loadSession(
 		func(key string) ([]byte, error) {
+			logger.Printf("loading session with key %q", key)
+
 			return m.Store.Load(req.Context(), key)
 		},
 		m.Store.Lock,
