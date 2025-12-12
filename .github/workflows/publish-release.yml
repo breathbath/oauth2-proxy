@@ -116,9 +116,9 @@ jobs:
     - name: Login to quay.io
       uses: docker/login-action@v3
       with:
-        registry: quay.io/oauth2-proxy
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build images
       run: |
