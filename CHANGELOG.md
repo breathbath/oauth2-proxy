@@ -6,6 +6,16 @@
 
 ## Breaking Changes
 
+## Changes since v7.13.4
+
+# V7.13.4
+
+## Release Highlights
+
+## Important Notes
+
+## Breaking Changes
+
 ## Changes since v7.13.3
 
 # V7.13.3
