@@ -55,7 +55,7 @@ func (store *SessionStore) Load(ctx context.Context, key string) ([]byte, error)
 		return nil, fmt.Errorf("error loading redis session: %v", err)
 	}
 
-	logger.Printf("loeaded session value under key %q, value %q", key, string(value))
+	logger.Printf("loeaded session value under key %q", key)
 
 	return value, nil
 }

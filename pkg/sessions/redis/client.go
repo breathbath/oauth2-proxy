@@ -31,22 +31,22 @@ func newClient(c *redis.Client) Client {
 }
 
 func (c *client) Get(ctx context.Context, key string) ([]byte, error) {
-	res, err := c.Client.Get(ctx, key).Result()
-	logger.Printf("redis GET %q result: %s %v", key, res, err)
+	_, err := c.Client.Get(ctx, key).Result()
+	logger.Printf("redis GET %q: %v", key, err)
 
 	return c.Client.Get(ctx, key).Bytes()
 }
 
 func (c *client) Set(ctx context.Context, key string, value []byte, expiration time.Duration) error {
 	resStr, err := c.Client.Set(ctx, key, value, expiration).Result()
-	logger.Printf("Redis SET %s %s %s", key, resStr, err)
+	logger.Printf("Redis SET %s %s %v", key, resStr, err)
 
 	return err
 }
 
 func (c *client) Del(ctx context.Context, key string) error {
 	res, err := c.Client.Del(ctx, key).Result()
-	logger.Printf("Redis DEL %s %d %s", key, res, err)
+	logger.Printf("Redis DEL %s %d %v", key, res, err)
 
 	return err
 }
