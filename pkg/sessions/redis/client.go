@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -30,15 +31,24 @@ func newClient(c *redis.Client) Client {
 }
 
 func (c *client) Get(ctx context.Context, key string) ([]byte, error) {
+	res, err := c.Client.Get(ctx, key).Result()
+	logger.Printf("redis GET %q result: %s %v", key, res, err)
+
 	return c.Client.Get(ctx, key).Bytes()
 }
 
 func (c *client) Set(ctx context.Context, key string, value []byte, expiration time.Duration) error {
-	return c.Client.Set(ctx, key, value, expiration).Err()
+	resStr, err := c.Client.Set(ctx, key, value, expiration).Result()
+	logger.Printf("Redis SET %s %s %s", key, resStr, err)
+
+	return err
 }
 
 func (c *client) Del(ctx context.Context, key string) error {
-	return c.Client.Del(ctx, key).Err()
+	res, err := c.Client.Del(ctx, key).Result()
+	logger.Printf("Redis DEL %s %d %s", key, res, err)
+
+	return err
 }
 
 func (c *client) Lock(key string) sessions.Lock {
@@ -46,7 +56,11 @@ func (c *client) Lock(key string) sessions.Lock {
 }
 
 func (c *client) Ping(ctx context.Context) error {
-	return c.Client.Ping(ctx).Err()
+	res, err := c.Client.Ping(ctx).Result()
+
+	logger.Printf("Redis PING %s", res)
+
+	return err
 }
 
 var _ Client = (*clusterClient)(nil)

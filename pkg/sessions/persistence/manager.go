@@ -48,7 +48,7 @@ func (m *Manager) Save(rw http.ResponseWriter, req *http.Request, s *sessions.Se
 	}
 
 	err = tckt.saveSession(s, func(key string, val []byte, exp time.Duration) error {
-		logger.Printf("saving session %q (expires %s): %v", key, exp, val)
+		logger.Printf("saving session %q (expires %s): %v", key, exp, string(val))
 
 		return m.Store.Save(req.Context(), key, val, exp)
 	})
@@ -66,8 +66,6 @@ func (m *Manager) Load(req *http.Request) (*sessions.SessionState, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	logger.Printf("loading session with id %q", tckt.id)
 
 	return tckt.loadSession(
 		func(key string) ([]byte, error) {

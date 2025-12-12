@@ -55,6 +55,8 @@ func (store *SessionStore) Load(ctx context.Context, key string) ([]byte, error)
 		return nil, fmt.Errorf("error loading redis session: %v", err)
 	}
 
+	logger.Printf("loeaded session value under key %q, value %q", key, string(value))
+
 	return value, nil
 }
 
@@ -114,7 +116,7 @@ func buildSentinelClient(opts options.RedisStoreOptions) (Client, error) {
 		return nil, err
 	}
 
-	client := redis.NewFailoverClient(&redis.FailoverOptions{
+	options := &redis.FailoverOptions{
 		MasterName:       opts.SentinelMasterName,
 		SentinelAddrs:    addrs,
 		SentinelPassword: opts.SentinelPassword,
@@ -122,7 +124,11 @@ func buildSentinelClient(opts options.RedisStoreOptions) (Client, error) {
 		Password:         opts.Password,
 		TLSConfig:        opt.TLSConfig,
 		ConnMaxIdleTime:  time.Duration(opts.IdleTimeout) * time.Second,
-	})
+	}
+
+	logger.Printf("redis connection options: %+v", options)
+	client := redis.NewFailoverClient(options)
+
 	return newClient(client), nil
 }
 
@@ -174,6 +180,8 @@ func buildStandaloneClient(opts options.RedisStoreOptions) (Client, error) {
 	}
 
 	opt.ConnMaxIdleTime = time.Duration(opts.IdleTimeout) * time.Second
+
+	logger.Printf("redis connection options: %+v", opt)
 
 	client := redis.NewClient(opt)
 	return newClient(client), nil
