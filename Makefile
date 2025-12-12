@@ -30,7 +30,7 @@ GOLANGCILINT ?= golangci-lint
 BINARY := oauth2-proxy
 VERSION ?= $(shell git describe --always --dirty --tags 2>/dev/null || echo "undefined")
 # Allow to override image registry.
-REGISTRY   ?= quay.io/breathbath
+REGISTRY   ?= ghcr.io/breathbath
 REPOSITORY ?= oauth2-proxy
 
 DATE := $(shell date +"%Y%m%d")
