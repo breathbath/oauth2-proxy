@@ -11,14 +11,12 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  packages: write
+  attestations: write
+  id-token: write
 
 jobs:
   publish:
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
     outputs:
