@@ -6,6 +6,16 @@
 
 ## Breaking Changes
 
+## Changes since v7.13.2
+
+# V7.13.2
+
+## Release Highlights
+
+## Important Notes
+
+## Breaking Changes
+
 ## Changes since v7.13.0
 
 - [#3197](https://github.com/oauth2-proxy/oauth2-proxy/pull/3197) fix: NewRemoteKeySet is not using DefaultHTTPClient (@rsrdesarrollo / @tuunit)
