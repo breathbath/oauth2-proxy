@@ -88,6 +88,12 @@ func newClaimInjector(name string, source *options.ClaimSource) (valueInjector, 
 		}
 		return newInjectorFunc(func(header http.Header, session *sessionsapi.SessionState) {
 			claimValues := session.GetClaim(source.Claim)
+			logger.Printf(
+				"Injecting header %+v injector for claim %q, claim values: %+v",
+				header,
+				source.Claim,
+				claimValues,
+			)
 			for _, claim := range claimValues {
 				if claim == "" {
 					continue
@@ -99,6 +105,12 @@ func newClaimInjector(name string, source *options.ClaimSource) (valueInjector, 
 	case source.Prefix != "":
 		return newInjectorFunc(func(header http.Header, session *sessionsapi.SessionState) {
 			claimValues := session.GetClaim(source.Claim)
+			logger.Printf(
+				"Injecting header %+v injector for claim %q, claim values: %+v",
+				header,
+				source.Claim,
+				claimValues,
+			)
 			for _, claim := range claimValues {
 				if claim == "" {
 					continue
@@ -109,6 +121,12 @@ func newClaimInjector(name string, source *options.ClaimSource) (valueInjector, 
 	default:
 		return newInjectorFunc(func(header http.Header, session *sessionsapi.SessionState) {
 			claimValues := session.GetClaim(source.Claim)
+			logger.Printf(
+				"Injecting header %+v injector for claim %q, claim values: %+v",
+				header,
+				source.Claim,
+				claimValues,
+			)
 			for _, claim := range claimValues {
 				if claim == "" {
 					continue
