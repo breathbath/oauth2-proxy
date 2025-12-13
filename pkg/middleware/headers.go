@@ -9,10 +9,13 @@ import (
 	middlewareapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/middleware"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/header"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/util/ptr"
 )
 
 func NewRequestHeaderInjector(headers []options.Header) (alice.Constructor, error) {
+	logger.Printf("RequestHeaderInjector created with headers: %v", headers)
+
 	headerInjector, err := newRequestHeaderInjector(headers)
 	if err != nil {
 		return nil, fmt.Errorf("error building request header injector: %v", err)
@@ -80,6 +83,7 @@ func injectRequestHeaders(injector header.Injector, next http.Handler) http.Hand
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		scope := middlewareapi.GetRequestScope(req)
 
+		logger.Printf("Request headers injecting: %v", scope)
 		// If scope is nil, this will panic.
 		// A scope should always be injected before this handler is called.
 		injector.Inject(req.Header, scope.Session)

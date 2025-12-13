@@ -1001,6 +1001,7 @@ func (p *OAuthProxy) AuthOnly(rw http.ResponseWriter, req *http.Request) {
 
 	// we are authenticated
 	p.addHeadersForProxying(rw, session)
+	logger.Print("will call AuthOnly with headersChain")
 	p.headersChain.Then(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
 		rw.WriteHeader(http.StatusAccepted)
 	})).ServeHTTP(rw, req)
@@ -1012,9 +1013,11 @@ func (p *OAuthProxy) Proxy(rw http.ResponseWriter, req *http.Request) {
 	session, err := p.getAuthenticatedSession(rw, req)
 	switch err {
 	case nil:
+		logger.Print("will call Proxy with headersChain")
 		// Check against our authorization constraints and return forbidden
 		// if this request fails to satisfy them.
 		if !authOnlyAuthorize(req, session) {
+			logger.Print("will skip Proxy")
 			http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		}

@@ -56,11 +56,7 @@ func (c *client) Lock(key string) sessions.Lock {
 }
 
 func (c *client) Ping(ctx context.Context) error {
-	res, err := c.Client.Ping(ctx).Result()
-
-	logger.Printf("Redis PING %s", res)
-
-	return err
+	return c.Client.Ping(ctx).Err()
 }
 
 var _ Client = (*clusterClient)(nil)

@@ -8,6 +8,7 @@ import (
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options/util"
 	sessionsapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 )
 
 type Injector interface {
@@ -19,6 +20,7 @@ type injector struct {
 }
 
 func (i injector) Inject(header http.Header, session *sessionsapi.SessionState) {
+	logger.Printf("Injecting header %+v injector for session state: %#v", header, session)
 	for _, injector := range i.valueInjectors {
 		injector.inject(header, session)
 	}
