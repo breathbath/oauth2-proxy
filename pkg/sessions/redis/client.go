@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"runtime/debug"
 	"time"
 
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
@@ -46,6 +47,8 @@ func (c *client) Set(ctx context.Context, key string, value []byte, expiration t
 
 func (c *client) Del(ctx context.Context, key string) error {
 	res, err := c.Client.Del(ctx, key).Result()
+	stack := debug.Stack()
+	logger.Printf("stacktrace:\n%s\n", stack)
 	logger.Printf("Redis DEL %s %d %v", key, res, err)
 
 	return err
